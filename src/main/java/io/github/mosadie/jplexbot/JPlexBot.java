@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 
 import io.github.mosadie.jplexbot.discord.DiscordConnection;
 import io.github.mosadie.plex.PlexApi;
-import io.github.mosadie.plex.PlexServer;
 
 public class JPlexBot {
     public static void main(String[] args) {
@@ -18,7 +17,6 @@ public class JPlexBot {
 
     public DiscordConnection discord;
     public PlexApi plex;
-    public PlexServer plexServer;
     public MusicConnection music;
     
     public JPlexBot() {
@@ -55,7 +53,6 @@ public class JPlexBot {
             configInput.close();
 
             plex = new PlexApi(plexUsername, plexPassword);
-            plexServer = (plex.getServers() != null ? plex.getServers().get(0) : null);
             discord = new DiscordConnection(discordBotToken, prefix, this);
 
             music = new MusicConnection(this);
