@@ -24,7 +24,7 @@ public class ListServersCommand implements Command, Comparable<Command> {
     
     @Override
     public String getHelpMessage() {
-        return "Lists the available plex servers, use `selectServer` to select a server";
+        return "Lists the available Plex servers.";
     }
     
     @Override
