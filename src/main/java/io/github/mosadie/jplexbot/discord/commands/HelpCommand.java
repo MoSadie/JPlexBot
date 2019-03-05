@@ -1,6 +1,8 @@
 package io.github.mosadie.jplexbot.discord.commands;
 
 import io.github.mosadie.jplexbot.JPlexBot;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 
@@ -33,16 +35,21 @@ public class HelpCommand implements Command, Comparable<Command> {
 
     @Override
     public void execute(VoiceChannel vc, Message msg, JPlexBot plexBot) {
-        String message = msg.getAuthor().getAsMention() + ", here's all the commands I can run:";
+        MessageBuilder messageBuilder = new MessageBuilder();
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        messageBuilder.setContent(msg.getAuthor().getAsMention() + ", here's all the commands I can run:");
+        embedBuilder.setTitle("Available Commands");
+
         String prefix = plexBot.discord.prefix;
         for(Command command : plexBot.discord.getCommands()) {
-            message += "\n\n\n**__" + command.getFriendlyName() +"__**: (" + command.getCommandName() + ")" +
-                        "\n\n *__Description__*: " + command.getHelpMessage() +
-                        "\n\n *__Usage__*: `" + prefix + command.getUsage() + "`" +
-                        "\n\n *__Example__*: `" + prefix + command.getExampleUsage() + "`";
+            embedBuilder.addField(command.getFriendlyName() +": (" + command.getCommandName() + ")",
+                "*__Description__*: " + command.getHelpMessage() +
+                "\n *__Usage__*: `" + prefix + command.getUsage() + "`" +
+                "\n *__Example__*: `" + prefix + command.getExampleUsage() + "`", false);
         }
+        messageBuilder.setEmbed(embedBuilder.build());
 
-        msg.getChannel().sendMessage(message).queue();
+        msg.getChannel().sendMessage(messageBuilder.build()).queue();
     }
 
     @Override

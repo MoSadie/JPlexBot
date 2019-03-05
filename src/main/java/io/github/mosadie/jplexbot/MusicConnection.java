@@ -18,6 +18,7 @@ import io.github.mosadie.plex.PlexMusicTrack;
 import io.github.mosadie.plex.PlexServer;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.managers.AudioManager;
 
@@ -29,11 +30,18 @@ public class MusicConnection {
         this.plexBot = plexBot;
         
         playerManager = new DefaultAudioPlayerManager();
-        AudioSourceManagers.registerRemoteSources(playerManager);
+        AudioSourceManagers.registerRemoteSources(getPlayerManager());
         players = new HashMap<>();
     }
     
-    public void addToQueue(VoiceChannel vc, MessageChannel tc, String song) {
+    /**
+	 * @return the playerManager
+	 */
+	public AudioPlayerManager getPlayerManager() {
+		return playerManager;
+	}
+
+	public void addToQueue(VoiceChannel vc, MessageChannel tc, User author, String song) {
         Guild guild = vc.getGuild();
         
         checkAndJoinVC(vc);
@@ -52,12 +60,12 @@ public class MusicConnection {
             }
         }
         
-        playerManager.loadItemOrdered(guild.getAudioManager(), song, new AudioLoadResultHandler(){
+        getPlayerManager().loadItemOrdered(guild.getAudioManager(), song, new AudioLoadResultHandler(){
             
             @Override
             public void trackLoaded(AudioTrack track) {
                 players.get(guild).trackScheduler.queue(track);
-                tc.sendMessage("Added song `" + track.getInfo().title + "` to queue").queue();
+                tc.sendMessage(author.getAsMention() + ", added song `" + track.getInfo().title + "` to queue").queue();
             }
             
             @Override
@@ -65,7 +73,7 @@ public class MusicConnection {
                 for(AudioTrack track : playlist.getTracks()) {
                     players.get(guild).trackScheduler.queue(track);
                 }
-                tc.sendMessage("Added playlist `" + playlist.getName() + "` to the queue").queue();
+                tc.sendMessage(author.getAsMention() + ", added playlist `" + playlist.getName() + "` to the queue").queue();
             }
             
             @Override
@@ -94,7 +102,7 @@ public class MusicConnection {
         
         if (!players.containsKey(guild)) {
             audioManager.openAudioConnection(vc);
-            AudioPlayerSendHandler handler = new AudioPlayerSendHandler(playerManager.createPlayer());
+            AudioPlayerSendHandler handler = new AudioPlayerSendHandler(getPlayerManager().createPlayer(), this);
             audioManager.setSendingHandler(handler);
             players.put(guild, handler);
         }
@@ -115,12 +123,43 @@ public class MusicConnection {
     }
     
     public AudioTrack skip(Guild guild) {
+        return removeFromQueue(guild, 0);
+    }
+
+    public AudioTrack removeFromQueue(Guild guild, int index) {
         if (players.containsKey(guild)) {
-            AudioTrack track = players.get(guild).trackScheduler.getQueue(true).peek();
-            players.get(guild).trackScheduler.nextTrack();
+            AudioTrack track = players.get(guild).trackScheduler.removeFromQueue(index);
             return track;
         }
-        
+
         return null;
+    }
+
+    public boolean getLooping(Guild guild) {
+        if (players.containsKey(guild)) {
+            return players.get(guild).trackScheduler.isLooping();
+        }
+        
+        return false;
+    }
+
+    public void setLooping(Guild guild, boolean looping) {
+        if (players.containsKey(guild)) {
+            players.get(guild).trackScheduler.setLooping(looping);
+        }
+    }
+
+    public boolean getPaused(Guild guild) {
+        if (players.containsKey(guild)) {
+            return players.get(guild).trackScheduler.isPaused();
+        }
+        
+        return false;
+    }
+
+    public void setPaused(Guild guild, boolean paused) {
+        if (players.containsKey(guild)) {
+            players.get(guild).trackScheduler.setPaused(paused);
+        }
     }
 }

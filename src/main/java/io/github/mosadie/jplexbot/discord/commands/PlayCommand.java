@@ -45,12 +45,16 @@ public class PlayCommand implements Command, Comparable<Command> {
         String[] commandAndArgs = msg.getContentRaw().split(" ", 2);
         String args = (commandAndArgs.length > 1 ? commandAndArgs[1] : "");
 
-        if (args == "") {
-            msg.getChannel().sendMessage(msg.getAuthor().getAsMention() +" you didn't tell me what to play! Usage: " + getUsage()).queue();
+        if (args == "" && !plexBot.music.getPaused(vc.getGuild())) {
+            msg.getChannel().sendMessage(msg.getAuthor().getAsMention() + " you didn't tell me what to play! Usage: " + getUsage()).queue();
+            return;
+        } else if (plexBot.music.getPaused(vc.getGuild())) {
+            plexBot.music.setPaused(vc.getGuild(), false);
+            msg.getChannel().sendMessage(msg.getAuthor().getAsMention() + ", unpaused.").queue();
             return;
         }
 
-        plexBot.music.addToQueue(vc, msg.getChannel(), args);
+        plexBot.music.addToQueue(vc, msg.getChannel(), msg.getAuthor(), args);
     }
 
     @Override

@@ -23,9 +23,6 @@ public class JPlexBot {
         File configDir = new File("JPlexBotConfig");
         configDir.mkdir();
         File configFile = new File(configDir, "config.txt");
-        if (configDir.exists()) {
-            System.out.println("Config Dir: " + configDir.getAbsolutePath());
-        }
         try {
             if (configFile.createNewFile()) {
                 JOptionPane.showMessageDialog(null, "Welcome to the JPlexBot setup wizard! Click 'OK' to continue.", "JPlexBot Setup", JOptionPane.PLAIN_MESSAGE);
@@ -33,6 +30,7 @@ public class JPlexBot {
                 String plexPassword = JOptionPane.showInputDialog(null, "What is the password for the Plex account?", "JPlexBot Setup", JOptionPane.QUESTION_MESSAGE);
                 String discordBotToken = JOptionPane.showInputDialog(null, "What is the Discord Bot's token?", "JPlexBot Setup", JOptionPane.QUESTION_MESSAGE);
                 String prefix = JOptionPane.showInputDialog(null, "What is the desired prefix for all commands?", "JPlexBot Setup", JOptionPane.QUESTION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "All configured! Just copy/paste the url shown in the console window to add the bot to your server!", "JPlexBot Setup", JOptionPane.PLAIN_MESSAGE);
                 PrintStream file = new PrintStream(configFile);
                 file.println(plexUsername);
                 file.println(plexPassword);
@@ -54,6 +52,10 @@ public class JPlexBot {
 
             plex = new PlexApi(plexUsername, plexPassword);
             discord = new DiscordConnection(discordBotToken, prefix, this);
+
+            System.out.println();
+            System.out.println("DISCORD BOT INVITE LINK: " + discord.getInviteURL());
+            System.out.println();
 
             music = new MusicConnection(this);
         } catch (Exception e) {

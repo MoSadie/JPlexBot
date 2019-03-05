@@ -15,7 +15,9 @@ import io.github.mosadie.jplexbot.discord.commands.Command;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.JDA.Status;
+import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
@@ -54,13 +56,17 @@ public class DiscordConnection extends ListenerAdapter {
 
     }
 
+    public String getInviteURL() {
+        return discord.asBot().getInviteUrl(Permission.VIEW_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_EMBED_LINKS);
+    }
+
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         if (event.getMessage().getAuthor().equals(discord.getSelfUser())) {
             return;
         }
 
-        if (!event.getMessage().getContentRaw().startsWith(prefix)) {
+        if (!event.getMessage().getContentRaw().startsWith(prefix) && event.getChannelType() != ChannelType.PRIVATE) {
             return;
         }
 
@@ -73,12 +79,16 @@ public class DiscordConnection extends ListenerAdapter {
         VoiceChannel voiceChannel = getVoiceChannel(event.getAuthor());
         if (voiceChannel == null) {
             event.getChannel().sendMessage("Sorry, " + event.getAuthor().getAsMention()
-                    + ", you must join a voice channel before sending commands.").queue();
+                    + ", you must join a voice channel I can access before sending commands.").queue();
             return;
         }
 
         String[] commandAndArgs = event.getMessage().getContentRaw().split(" ", 2);
         String command = commandAndArgs[0].toLowerCase();
+
+        if (event.getChannelType() == ChannelType.PRIVATE && !command.startsWith(prefix)) {
+            command = prefix + command;
+        }
         
         if (!commands.containsKey(command)) {
             event.getChannel()

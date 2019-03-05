@@ -40,10 +40,12 @@ public class ListQueueCommand implements Command, Comparable<Command> {
         Queue<AudioTrack> queue = plexBot.music.getQueue(vc.getGuild(), true);
         String message = msg.getAuthor().getAsMention() + ", Here's the current queue:";
         
+        int i = 0;
         while(!queue.isEmpty()) {
             AudioTrack track = queue.remove();
             if (track != null) {
-                message += "\n- *" + track.getInfo().title + (track.getInfo().author != null ? "* by " + track.getInfo().author : "") + " *(" + durationConversion(track.getDuration()) + ")*";
+                message += "\n- " + i + ": *" + track.getInfo().title + (track.getInfo().author != null ? "* by " + track.getInfo().author : "") + " *(" + durationConversion(track.getDuration()) + ")*";
+                i++;
             }
         }
                 
@@ -59,6 +61,6 @@ public class ListQueueCommand implements Command, Comparable<Command> {
     private String durationConversion(long milliseconds) {
         long minutes = milliseconds/60000;
         long seconds = (milliseconds%60000)/1000;
-        return minutes + ":" + seconds;
+        return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
     }
 }

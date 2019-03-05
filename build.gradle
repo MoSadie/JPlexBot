@@ -14,7 +14,7 @@ dependencies {
     implementation group: 'org.reflections', name: 'reflections', version: '0.9.11'
     implementation 'com.sedmelluq:lavaplayer:1.3.10'
     implementation 'net.dv8tion:JDA:3.8.3_460'
-    implementation 'com.github.MoSadie:PlexAPI-Java:6044539465'
+    implementation 'com.github.MoSadie:PlexAPI-Java:50f304e7ea'
 }
 
 application {

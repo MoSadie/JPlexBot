@@ -1,10 +1,14 @@
 package io.github.mosadie.jplexbot;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
@@ -17,13 +21,19 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
     private final BlockingQueue<AudioTrack> queue;
+    private boolean looping;
+    private final MusicConnection musicConn;
+    private final AudioPlayerSendHandler apsh;
     
     /**
     * @param player The audio player this scheduler uses
     */
-    public TrackScheduler(AudioPlayer player) {
+    public TrackScheduler(AudioPlayer player, MusicConnection musicConn, AudioPlayerSendHandler apsh) {
         this.player = player;
+        this.musicConn = musicConn;
+        this.apsh = apsh;
         this.queue = new LinkedBlockingQueue<>();
+        this.looping = false;
     }
     
     /**
@@ -37,6 +47,8 @@ public class TrackScheduler extends AudioEventAdapter {
         // track goes to the queue instead.
         if (!player.startTrack(track, true)) {
             queue.offer(track);
+        } else {
+            player.setPaused(false);
         }
     }
     
@@ -51,6 +63,27 @@ public class TrackScheduler extends AudioEventAdapter {
     
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        if (looping) {
+            musicConn.getPlayerManager().loadItemOrdered(apsh, track.getIdentifier(), new AudioLoadResultHandler(){
+            
+                @Override
+                public void trackLoaded(AudioTrack track) {
+                    queue(track);
+                }
+                
+                @Override
+                public void playlistLoaded(AudioPlaylist playlist) {
+                }
+                
+                @Override
+                public void noMatches() {
+                }
+                
+                @Override
+                public void loadFailed(FriendlyException exception) {
+                }
+            });
+        }
         // Only start the next track if the end reason is suitable for it (FINISHED or LOAD_FAILED)
         if (endReason.mayStartNext) {
             nextTrack();
@@ -72,5 +105,42 @@ public class TrackScheduler extends AudioEventAdapter {
         }
         
         return copyQueue;
+    }
+
+    public boolean isLooping() {
+        return looping;
+    }
+
+    public void setLooping(boolean nowLooping) {
+        looping = nowLooping;
+    }
+
+    public boolean isPaused() {
+        return player.isPaused();
+    }
+
+    public void setPaused(boolean paused) {
+        player.setPaused(paused);
+    }
+
+    public AudioTrack removeFromQueue(int index) {
+        if (index == 0) {
+            AudioTrack track = player.getPlayingTrack();
+            nextTrack();
+            return track;
+        }
+
+        int currIndex = 1;
+        Iterator<AudioTrack> itr = queue.iterator();
+        while (itr.hasNext() && currIndex <= index) {
+            AudioTrack track = itr.next();
+            if (currIndex == index) {
+                itr.remove();
+                return track;
+            }
+            currIndex++;
+        }
+
+        return null;
     }
 }

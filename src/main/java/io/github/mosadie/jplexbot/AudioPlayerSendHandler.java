@@ -11,9 +11,9 @@ public class AudioPlayerSendHandler implements AudioSendHandler {
     public final TrackScheduler trackScheduler;
     private AudioFrame lastFrame;
   
-    public AudioPlayerSendHandler(AudioPlayer audioPlayer) {
+    public AudioPlayerSendHandler(AudioPlayer audioPlayer, MusicConnection musicConn) {
       this.audioPlayer = audioPlayer;
-      trackScheduler = new TrackScheduler(audioPlayer);
+      trackScheduler = new TrackScheduler(audioPlayer, musicConn, this);
       audioPlayer.addListener(trackScheduler);
     }
   
