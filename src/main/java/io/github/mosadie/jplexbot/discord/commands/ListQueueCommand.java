@@ -8,7 +8,7 @@ import io.github.mosadie.jplexbot.JPlexBot;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 
-public class ListQueueCommand implements Command, Comparable<Command> {
+public class ListQueueCommand extends Command {
     
     @Override
     public String getCommandName() {
@@ -51,11 +51,6 @@ public class ListQueueCommand implements Command, Comparable<Command> {
                 
         message += "\n\n Use `" + plexBot.discord.prefix + "play` to add a song!";
         msg.getChannel().sendMessage(message).queue();
-    }
-    
-    @Override
-    public int compareTo(Command other) {
-        return getCommandName().compareTo(other.getCommandName());
     }
     
     private String durationConversion(long milliseconds) {

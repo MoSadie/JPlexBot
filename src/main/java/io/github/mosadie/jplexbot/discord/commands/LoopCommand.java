@@ -4,7 +4,7 @@ import io.github.mosadie.jplexbot.JPlexBot;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 
-public class LoopCommand implements Command, Comparable<Command> {
+public class LoopCommand extends Command {
     
     @Override
     public String getCommandName() {
@@ -41,10 +41,4 @@ public class LoopCommand implements Command, Comparable<Command> {
             msg.getChannel().sendMessage(msg.getAuthor().getAsMention() + ", looping enabled.").queue();
         }
     }
-    
-    @Override
-    public int compareTo(Command other) {
-        return getCommandName().compareTo(other.getCommandName());
-    }
-    
 }

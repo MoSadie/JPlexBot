@@ -109,6 +109,15 @@ public class MusicConnection {
         
         return result;
     }
+
+    public boolean leaveVC(Guild guild) {
+        if (guild.getAudioManager().getConnectedChannel() == null) {
+            return false;
+        } else {
+            guild.getAudioManager().closeAudioConnection();
+            return true;
+        }
+    }
     
     public Queue<AudioTrack> getQueue(Guild guild) {
         return getQueue(guild, false);
@@ -161,5 +170,23 @@ public class MusicConnection {
         if (players.containsKey(guild)) {
             players.get(guild).trackScheduler.setPaused(paused);
         }
+    }
+
+	public int getVolume(Guild guild) {
+		return ((AudioPlayerSendHandler) guild.getAudioManager().getSendingHandler()).getVolume();
+    }
+    
+    public boolean setVolume(Guild guild, int newVolume) {
+        if (newVolume > 1000 || newVolume < 0) {
+            return false;
+        }
+
+        if (guild.getAudioManager().getSendingHandler() == null) {
+            return false;
+        }
+
+        ((AudioPlayerSendHandler)guild.getAudioManager().getSendingHandler()).setVolume(newVolume);
+
+        return true;
     }
 }

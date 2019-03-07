@@ -97,7 +97,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public Queue<AudioTrack> getQueue(boolean includeCurrentlyPlaying) {
         Queue<AudioTrack> copyQueue = new LinkedList<AudioTrack>();
         AudioTrack[] queueArray = queue.toArray(new AudioTrack[queue.size() + (includeCurrentlyPlaying ? 1 : 0)]);
-        if (includeCurrentlyPlaying) {
+        if (includeCurrentlyPlaying && player.getPlayingTrack() != null)  {
             copyQueue.add(player.getPlayingTrack());
         }
         for (AudioTrack track : queueArray) {

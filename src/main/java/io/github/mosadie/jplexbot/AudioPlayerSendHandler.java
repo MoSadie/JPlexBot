@@ -10,26 +10,34 @@ public class AudioPlayerSendHandler implements AudioSendHandler {
     private final AudioPlayer audioPlayer;
     public final TrackScheduler trackScheduler;
     private AudioFrame lastFrame;
-  
+    
     public AudioPlayerSendHandler(AudioPlayer audioPlayer, MusicConnection musicConn) {
-      this.audioPlayer = audioPlayer;
-      trackScheduler = new TrackScheduler(audioPlayer, musicConn, this);
-      audioPlayer.addListener(trackScheduler);
+        this.audioPlayer = audioPlayer;
+        trackScheduler = new TrackScheduler(audioPlayer, musicConn, this);
+        audioPlayer.addListener(trackScheduler);
     }
-  
+    
     @Override
     public boolean canProvide() {
-      lastFrame = audioPlayer.provide();
-      return lastFrame != null;
+        lastFrame = audioPlayer.provide();
+        return lastFrame != null;
     }
-  
+    
     @Override
     public byte[] provide20MsAudio() {
-      return lastFrame.getData();
+        return lastFrame.getData();
     }
-  
+    
     @Override
     public boolean isOpus() {
-      return true;
+        return true;
     }
-  }
+    
+    public int getVolume() {
+        return audioPlayer.getVolume();
+    }
+
+    public void setVolume(int newVolume) {
+        audioPlayer.setVolume(newVolume);
+    }
+}

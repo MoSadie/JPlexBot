@@ -6,7 +6,7 @@ import io.github.mosadie.jplexbot.JPlexBot;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 
-public class SkipCommand implements Command, Comparable<Command> {
+public class SkipCommand extends Command {
 
     @Override
     public String getCommandName() {
@@ -37,10 +37,5 @@ public class SkipCommand implements Command, Comparable<Command> {
     public void execute(VoiceChannel vc, Message msg, JPlexBot plexBot) {
         AudioTrack song = plexBot.music.skip(vc.getGuild());
         msg.getChannel().sendMessage(msg.getAuthor().getAsMention() + ", " + song.getInfo().title + " has been skipped.").queue();
-    }
-
-    @Override
-    public int compareTo(Command other) {
-        return getCommandName().compareTo(other.getCommandName());
     }
 }

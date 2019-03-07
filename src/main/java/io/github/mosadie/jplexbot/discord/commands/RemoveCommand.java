@@ -6,7 +6,7 @@ import io.github.mosadie.jplexbot.JPlexBot;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 
-public class RemoveCommand implements Command, Comparable<Command> {
+public class RemoveCommand extends Command {
     
     @Override
     public String getCommandName() {
@@ -64,10 +64,5 @@ public class RemoveCommand implements Command, Comparable<Command> {
         } else {
             msg.getChannel().sendMessage(msg.getAuthor().getAsMention() + ", *" + track.getInfo().title + "* has been removed.").queue();
         }
-    }
-    
-    @Override
-    public int compareTo(Command other) {
-        return getCommandName().compareTo(other.getCommandName());
     }
 }

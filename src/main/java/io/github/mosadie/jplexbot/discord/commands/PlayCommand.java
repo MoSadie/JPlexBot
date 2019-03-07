@@ -4,7 +4,7 @@ import io.github.mosadie.jplexbot.JPlexBot;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 
-public class PlayCommand implements Command, Comparable<Command> {
+public class PlayCommand extends Command {
 
     @Override
     public String getCommandName() {
@@ -55,10 +55,5 @@ public class PlayCommand implements Command, Comparable<Command> {
         }
 
         plexBot.music.addToQueue(vc, msg.getChannel(), msg.getAuthor(), args);
-    }
-
-    @Override
-    public int compareTo(Command other) {
-        return getCommandName().compareTo(other.getCommandName());
     }
 }

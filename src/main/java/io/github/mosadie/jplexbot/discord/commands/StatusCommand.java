@@ -7,7 +7,7 @@ import io.github.mosadie.plex.PlexServer;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 
-public class StatusCommand implements Command, Comparable<Command> {
+public class StatusCommand extends Command {
 
     @Override
     public String getCommandName() {
@@ -47,10 +47,5 @@ public class StatusCommand implements Command, Comparable<Command> {
         msg.getChannel().sendMessage("Current Status:\nPlex Servers found: " + (plexStatus ? "Yes" : "No") +
             "\nDiscord Connected: " + (discordStatus ? "Yes" : "No")).queue();
         
-    }
-
-    @Override
-    public int compareTo(Command other) {
-        return getCommandName().compareTo(other.getCommandName());
     }
 }

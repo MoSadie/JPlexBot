@@ -4,7 +4,7 @@ import io.github.mosadie.jplexbot.JPlexBot;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 
-public class JoinCommand implements Command, Comparable<Command> {
+public class JoinCommand extends Command {
     
     @Override
     public String getCommandName() {
@@ -38,10 +38,5 @@ public class JoinCommand implements Command, Comparable<Command> {
         } else {
             msg.getChannel().sendMessage(msg.getAuthor().getAsMention() + ", I'm already in the voice channel!").queue();
         }
-    }
-    
-    @Override
-    public int compareTo(Command other) {
-        return getCommandName().compareTo(other.getCommandName());
     }
 }

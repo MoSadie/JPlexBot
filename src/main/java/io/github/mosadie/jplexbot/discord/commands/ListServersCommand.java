@@ -5,7 +5,7 @@ import io.github.mosadie.plex.PlexServer;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 
-public class ListServersCommand implements Command, Comparable<Command> {
+public class ListServersCommand extends Command {
     
     @Override
     public String getCommandName() {
@@ -41,10 +41,5 @@ public class ListServersCommand implements Command, Comparable<Command> {
 
         message += "\n\nNote: When searching for a song via Plex, the correct server will be selected automatically.";
         msg.getChannel().sendMessage(message).queue(); 
-    }
-    
-    @Override
-    public int compareTo(Command other) {
-        return getCommandName().compareTo(other.getCommandName());
     }
 }

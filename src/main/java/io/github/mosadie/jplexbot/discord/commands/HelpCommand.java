@@ -6,7 +6,7 @@ import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 
-public class HelpCommand implements Command, Comparable<Command> {
+public class HelpCommand extends Command {
 
     @Override
     public String getCommandName() {
@@ -50,10 +50,5 @@ public class HelpCommand implements Command, Comparable<Command> {
         messageBuilder.setEmbed(embedBuilder.build());
 
         msg.getChannel().sendMessage(messageBuilder.build()).queue();
-    }
-
-    @Override
-    public int compareTo(Command other) {
-        return getCommandName().compareTo(other.getCommandName());
     }
 }
