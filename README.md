@@ -20,7 +20,7 @@ It's a Discord bot designed to play music from a [Plex Media Server](https://ple
 - `queue`: Shows the current queue of songs.
 
 ## Config file
-The config file is created in the folder JPlexBotConfig as config.txt in the directory that the bot was launched from. (Usually inside of bin, but can change based on how you launch the bot.) You can make it yourself to advoid the popup when starting for the first time. Replace anything with brackets with the correct information.
+The config file is created in the folder JPlexBotConfig as config.txt in the directory that the bot was launched from. (Usually inside of bin, but can change based on how you launch the bot.) You can make it yourself to avoid the popup when starting for the first time. Replace anything with brackets with the correct information.
 
 config.txt:
 ```
