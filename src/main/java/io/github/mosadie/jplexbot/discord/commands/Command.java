@@ -10,6 +10,7 @@ public abstract class Command implements Comparable<Command> {
     public abstract String getUsage();
     public abstract String getHelpMessage();
     public abstract String getExampleUsage();
+    public abstract boolean requireVC();
     public abstract void execute(VoiceChannel vc, Message msg, JPlexBot plexBot);
 
     public int compareTo(Command other) {

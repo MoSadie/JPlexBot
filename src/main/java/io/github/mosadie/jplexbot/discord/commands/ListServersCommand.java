@@ -31,6 +31,11 @@ public class ListServersCommand extends Command {
     public String getExampleUsage() {
         return "listservers";
     }
+
+    @Override
+    public boolean requireVC() {
+        return false;
+    }
     
     @Override
     public void execute(VoiceChannel vc, Message msg, JPlexBot plexBot) {

@@ -34,6 +34,11 @@ public class SkipCommand extends Command {
     }
 
     @Override
+    public boolean requireVC() {
+        return true;
+    }
+
+    @Override
     public void execute(VoiceChannel vc, Message msg, JPlexBot plexBot) {
         AudioTrack song = plexBot.music.skip(vc.getGuild());
         msg.getChannel().sendMessage(msg.getAuthor().getAsMention() + ", " + song.getInfo().title + " has been skipped.").queue();

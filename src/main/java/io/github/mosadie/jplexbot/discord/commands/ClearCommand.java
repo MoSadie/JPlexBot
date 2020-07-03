@@ -32,11 +32,18 @@ public class ClearCommand extends Command {
     }
 
     @Override
+    public boolean requireVC() {
+        return true;
+    }
+
+    @Override
     public void execute(VoiceChannel vc, Message msg, JPlexBot plexBot) {
-        while (!plexBot.music.getQueue(vc.getGuild(), true).isEmpty()) {
-            plexBot.music.skip(vc.getGuild());
-        }
-        msg.getChannel().sendMessage(msg.getAuthor().getAsMention() + ", the queue has been cleared.").queue();
+        msg.getChannel().sendMessage("Hey, sorry, something's broken with clear, just spam skip to clear the queue.").queue();
+        return;
+        // while (!plexBot.music.getQueue(vc.getGuild(), true).isEmpty()) {
+        //     plexBot.music.skip(vc.getGuild());
+        // }
+        // msg.getChannel().sendMessage(msg.getAuthor().getAsMention() + ", the queue has been cleared.").queue();
     }
 
 }

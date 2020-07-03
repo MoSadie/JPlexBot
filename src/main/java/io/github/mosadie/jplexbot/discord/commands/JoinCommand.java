@@ -30,6 +30,11 @@ public class JoinCommand extends Command {
     public String getExampleUsage() {
         return "join";
     }
+
+    @Override
+    public boolean requireVC() {
+        return true;
+    }
     
     @Override
     public void execute(VoiceChannel vc, Message msg, JPlexBot plexBot) {

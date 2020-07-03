@@ -30,6 +30,11 @@ public class PauseCommand extends Command {
     public String getExampleUsage() {
         return "pause";
     }
+
+    @Override
+    public boolean requireVC() {
+        return true;
+    }
     
     @Override
     public void execute(VoiceChannel vc, Message msg, JPlexBot plexBot) {

@@ -34,6 +34,11 @@ public class HelpCommand extends Command {
     }
 
     @Override
+    public boolean requireVC() {
+        return false;
+    }
+
+    @Override
     public void execute(VoiceChannel vc, Message msg, JPlexBot plexBot) {
         MessageBuilder messageBuilder = new MessageBuilder();
         EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -45,6 +50,7 @@ public class HelpCommand extends Command {
             embedBuilder.addField(command.getFriendlyName() +": (" + command.getCommandName() + ")",
                 "*__Description__*: " + command.getHelpMessage() +
                 "\n *__Usage__*: `" + prefix + command.getUsage() + "`" +
+                "\n *__Requires VC__*: " + (command.requireVC() ? "Yes" : "No") +
                 "\n *__Example__*: `" + prefix + command.getExampleUsage() + "`", false);
         }
         messageBuilder.setEmbed(embedBuilder.build());

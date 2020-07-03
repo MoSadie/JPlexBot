@@ -30,6 +30,11 @@ public class LoopCommand extends Command {
     public String getExampleUsage() {
         return "loop";
     }
+
+    @Override
+    public boolean requireVC() {
+        return true;
+    }
     
     @Override
     public void execute(VoiceChannel vc, Message msg, JPlexBot plexBot) {

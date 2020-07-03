@@ -32,6 +32,11 @@ public class DisconnectCommand extends Command {
     }
 
     @Override
+    public boolean requireVC() {
+        return true;
+    }
+
+    @Override
     public void execute(VoiceChannel vc, Message msg, JPlexBot plexBot) {
         if (plexBot.music.leaveVC(vc.getGuild())) {
             msg.getChannel().sendMessage(msg.getAuthor().getAsMention() + ", I've disconnected from the voice channel.").queue();

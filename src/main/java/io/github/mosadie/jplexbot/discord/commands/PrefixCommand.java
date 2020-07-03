@@ -32,6 +32,11 @@ public class PrefixCommand extends Command {
     }
 
     @Override
+    public boolean requireVC() {
+        return false;
+    }
+
+    @Override
     public void execute(VoiceChannel vc, Message msg, JPlexBot plexBot) {
         msg.getChannel().sendMessage(msg.getAuthor().getAsMention() + ", the prefix for all commands (other than DM commands) is `" + plexBot.discord.prefix + "`.").queue();
     }

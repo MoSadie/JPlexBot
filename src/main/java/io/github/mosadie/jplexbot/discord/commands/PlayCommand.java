@@ -41,6 +41,11 @@ public class PlayCommand extends Command {
     }
 
     @Override
+    public boolean requireVC() {
+        return true;
+    }
+
+    @Override
     public void execute(VoiceChannel vc, Message msg, JPlexBot plexBot) {
         String[] commandAndArgs = msg.getContentRaw().split(" ", 2);
         String args = (commandAndArgs.length > 1 ? commandAndArgs[1] : "");

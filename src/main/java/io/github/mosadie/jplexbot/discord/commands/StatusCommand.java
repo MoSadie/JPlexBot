@@ -35,6 +35,11 @@ public class StatusCommand extends Command {
     }
 
     @Override
+    public boolean requireVC() {
+        return false;
+    }
+
+    @Override
     public void execute(VoiceChannel vc, Message msg, JPlexBot plexBot) {
         List<PlexServer> plexServers =plexBot.plex.getServers();
         boolean plexStatus = true;
@@ -44,8 +49,10 @@ public class StatusCommand extends Command {
 
         boolean discordStatus = plexBot.discord.isConnected();
 
-        msg.getChannel().sendMessage("Current Status:\nPlex Servers found: " + (plexStatus ? "Yes" : "No") +
-            "\nDiscord Connected: " + (discordStatus ? "Yes" : "No")).queue();
+        msg.getChannel().sendMessage("Current Status:" +
+                                     "\nPlex Servers found: " + (plexStatus ? "Yes" : "No") +
+                                     "\nDiscord Connected: " + (discordStatus ? "Yes" : "No") +
+                                     "\nVersion: " + plexBot.getVersion()).queue();
         
     }
 }

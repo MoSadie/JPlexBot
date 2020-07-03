@@ -5,7 +5,10 @@ import java.util.Queue;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import io.github.mosadie.jplexbot.JPlexBot;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 
 public class ListQueueCommand extends Command {
@@ -34,22 +37,38 @@ public class ListQueueCommand extends Command {
     public String getExampleUsage() {
         return "queue";
     }
+
+    @Override
+    public boolean requireVC() {
+        return true;
+    }
     
     @Override
     public void execute(VoiceChannel vc, Message msg, JPlexBot plexBot) {
         Queue<AudioTrack> queue = plexBot.music.getQueue(vc.getGuild(), true);
-        String message = msg.getAuthor().getAsMention() + ", Here's the current queue:";
+        String text = msg.getAuthor().getAsMention() + ", Here's the current queue:";
         
+        EmbedBuilder builder = new EmbedBuilder();
+        builder.setTitle("Current Queue");
         int i = 0;
-        while(!queue.isEmpty()) {
+        while(!queue.isEmpty() && builder.length() < 5000) {
             AudioTrack track = queue.remove();
             if (track != null) {
-                message += "\n- " + i + ": *" + track.getInfo().title + (track.getInfo().author != null ? "* by " + track.getInfo().author : "") + " *(" + durationConversion(track.getDuration()) + ")*";
+                String title = i + ": *" + track.getInfo().title;
+                String desc = (track.getInfo().author != null ? "Artist: " + track.getInfo().author + "     " : "") + "Duration: " + durationConversion(track.getDuration()) + "";
+                builder.addField(title, desc, false);
                 i++;
             }
         }
-                
-        message += "\n\n Use `" + plexBot.discord.prefix + "play` to add a song!";
+        
+        builder.addBlankField(false);
+        builder.addField("How to add a song", "Use `" + plexBot.discord.prefix + "play` to add a song!", false);
+
+        MessageEmbed embed = builder.build();
+        
+
+        Message message = new MessageBuilder().append(text).setEmbed(embed).build();
+
         msg.getChannel().sendMessage(message).queue();
     }
     

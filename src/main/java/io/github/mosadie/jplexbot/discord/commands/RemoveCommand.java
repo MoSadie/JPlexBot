@@ -32,6 +32,11 @@ public class RemoveCommand extends Command {
     public String getExampleUsage() {
         return "remove 1";
     }
+
+    @Override
+    public boolean requireVC() {
+        return true;
+    }
     
     @Override
     public void execute(VoiceChannel vc, Message msg, JPlexBot plexBot) {
